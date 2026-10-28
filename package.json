@@ -1,0 +1,19 @@
+{
+  "name": "mindkeep-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply mindkeep --local",
+    "migrate:remote": "wrangler d1 migrations apply mindkeep --remote",
+    "typecheck": "tsc",
+    "test": "node --test src/*.test.ts",
+    "smoke": "node smoke.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261023.1",
+    "typescript": "^5.7.0",
+    "wrangler": "^4.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+name = "mindkeep-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Frontend origin allowed by CORS. Set to your deployed frontend URL in production.
+ALLOWED_ORIGIN = "http://localhost:3000"
+# Your Firebase project id (Firebase console > Project settings). ID tokens are checked against it.
+FIREBASE_PROJECT_ID = "mindkeep-d374f"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mindkeep"
+database_id = "c80789f2-961f-4c47-b402-6e952435f952"
+migrations_dir = "migrations"
