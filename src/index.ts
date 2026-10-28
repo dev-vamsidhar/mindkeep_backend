@@ -3,7 +3,8 @@ import { sessionUser } from "./auth.ts";
 type Env = { DB: D1Database; ALLOWED_ORIGIN: string; FIREBASE_PROJECT_ID: string; FIREBASE_AUTH_EMULATOR?: string };
 
 class HttpError extends Error {
-  constructor(public status: number, message: string) { super(message); }
+  status: number;
+  constructor(status: number, message: string) { super(message); this.status = status; }
 }
 
 const MAX_ROWS = 500; // per request, across all tables; the client sends bigger backlogs in chunks
@@ -116,10 +117,20 @@ async function handle(req: Request, env: Env) {
   return sync(req, env, user.id);
 }
 
+// ALLOWED_ORIGIN is a comma-separated list. A "*" matches one subdomain label, so
+// "https://*.mindkeep.pages.dev" also allows Pages preview deploys.
+export function allowOrigin(origin: string | null, allowed: string) {
+  if (!origin) return "";
+  const match = (pattern: string) =>
+    new RegExp(`^${pattern.trim().replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[a-z0-9-]+")}$`, "i").test(origin);
+  return allowed.split(",").some(match) ? origin : "";
+}
+
 export default {
   async fetch(req: Request, env: Env) {
     const cors = {
-      "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN,
+      "Access-Control-Allow-Origin": allowOrigin(req.headers.get("Origin"), env.ALLOWED_ORIGIN),
+      Vary: "Origin",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Authorization, Content-Type",
       "Access-Control-Max-Age": "86400",

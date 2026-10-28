@@ -14,7 +14,9 @@ Frontend: `cd ../mindkeep_frontend && npm run dev` (http://localhost:3000, the o
 
 Locally, `.dev.vars` sets `FIREBASE_AUTH_EMULATOR=true` so the smoke test can send unsigned emulator-style tokens. Never set it in production.
 
-Deploy: `npx wrangler d1 create mindkeep`, paste the id into `wrangler.toml`, set `ALLOWED_ORIGIN` to the frontend's URL, then `npm run migrate:remote && npm run deploy`. Point the frontend's `NEXT_PUBLIC_API_URL` at the deployed Worker.
+Deploy the Worker: `npx wrangler d1 create mindkeep`, paste the id into `wrangler.toml`, set `ALLOWED_ORIGIN` to the frontend's origins (comma-separated; `https://*.<project>.pages.dev` covers preview deploys), then `npm run migrate:remote && npm run deploy`.
+
+Deploy the frontend on Cloudflare (Workers static assets): it is a static export (`next.config.mjs`) served by `mindkeep_frontend/wrangler.jsonc`, which also stops Cloudflare's build from trying the OpenNext setup. In the Worker's build settings use root directory `/` (the frontend is its own repo), build command `npm run build`, deploy command `npx wrangler deploy`. Add the build variables `NEXT_PUBLIC_API_URL` (the API Worker URL) and the four `NEXT_PUBLIC_FIREBASE_*` values from `.env.local`; they are inlined at build time, so redeploy after changing them. Add the site's domain to Firebase under Authentication > Settings > Authorized domains, and to `ALLOWED_ORIGIN` here. Pages are `/folder?id=`, `/note?id=` and `/note-folder?id=` (query strings, so no server is needed).
 
 ## How sync works
 

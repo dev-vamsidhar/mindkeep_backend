@@ -3,8 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
 [vars]
-# Frontend origin allowed by CORS. Set to your deployed frontend URL in production.
-ALLOWED_ORIGIN = "http://localhost:3000"
+# Frontend origins allowed by CORS, comma-separated. "*" matches one subdomain (Pages preview deploys),
+# e.g. "https://mindkeep.pages.dev,https://*.mindkeep.pages.dev,http://localhost:3000"
+ALLOWED_ORIGIN = "https://mindkeep.vamsidhar.in,https://*.vamsubala1.workers.dev,http://localhost:3000"
 # Your Firebase project id (Firebase console > Project settings). ID tokens are checked against it.
 FIREBASE_PROJECT_ID = "mindkeep-d374f"
 
